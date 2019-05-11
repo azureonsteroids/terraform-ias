@@ -1,14 +1,11 @@
-terraform {
-  backend "azurerm" {
-    storage_account_name = "mugsatfstate"
-    container_name       = "mugsctfstate"
-    key                  = "mug.terraform.tfstate"
-    
-    access_key  = "quV16Ctx7iBNNr5KbVaLs5aFDCA1uaw0m49J9XPgN2dyd7N6lwa7eXO5WJZ2MaNobYGCeSMf5F+epg4rF1ktMw=="
-
-  }
-
-}
+# terraform {
+#   backend "azurerm" {
+#     storage_account_name = "mugsatfstate"
+#     container_name       = "mugsctfstate"
+#     key                  = "mug.terraform.tfstate"
+#     access_key  = "quV16Ctx7iBNNr5KbVaLs5aFDCA1uaw0m49J9XPgN2dyd7N6lwa7eXO5WJZ2MaNobYGCeSMf5F+epg4rF1ktMw=="
+#   }
+# }
 
 provider "azurerm" {
   # Whilst version is optional, we /strongly recommend/ using it to pin the version of the Provider being used
