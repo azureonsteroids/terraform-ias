@@ -21,7 +21,7 @@ resource "azurerm_virtual_network" "mug-subnet-infra" {
 }
 
 resource "azurerm_subnet" "mug-gateway-subnet" {
-  name                 = "mug-gateway-subnet"
+  name                 = "GatewaySubnet"
   resource_group_name  = "${azurerm_resource_group.mug-rg-infra.name}"
   virtual_network_name = "${azurerm_virtual_network.mug-subnet-infra.name}"
   address_prefix       = "10.51.40.32/27"
@@ -32,7 +32,7 @@ resource "azurerm_subnet" "mug-infra-front" {
   resource_group_name  = "${azurerm_resource_group.mug-rg-infra.name}"
   virtual_network_name = "${azurerm_virtual_network.mug-subnet-infra.name}"
   address_prefix       = "10.51.40.64/27"
-  network_security_group_id = "${azurerm_network_security_group.mug-sg-front.id}"
+  network_security_group_id = "${azurerm_network_security_group.mug-sg-front-gtw.id}"
 }
 
 resource "azurerm_network_security_group" "mug-sg-front" {
@@ -50,5 +50,67 @@ resource "azurerm_network_security_group" "mug-sg-front" {
     destination_port_range     = "80"
     source_address_prefix      = "*"
     destination_address_prefix = "*"
+  }
+}
+
+
+resource "azurerm_network_security_group" "mug-sg-front-gtw" {
+  name     = "mug-sg-front-gtw"
+  location = "${var.location}"
+  resource_group_name = "${azurerm_resource_group.mug-rg-infra.name}"
+
+  security_rule {
+    name                       = "HTTP"
+    priority                   = 3050
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "TCP"
+    source_port_range          = "*"
+    destination_port_range     = "80"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "HTTPS"
+    priority                   = 3060
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "TCP"
+    source_port_range          = "*"
+    destination_port_range     = "443"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }
+
+  security_rule {
+    name                       = "allow-inbound-port_65503-65534"
+    priority                   = 100
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "TCP"
+    source_port_range          = "0-65535"
+    destination_port_range     = "65503-65534"
+    source_address_prefix      = "*"
+    destination_address_prefix = "*"
+  }	
+
+}
+
+
+resource "azurerm_virtual_network_gateway" "mug-vnet-gateway-infra" {
+  name = "mug-vnet-gateway"
+  location = "${var.location}"
+  resource_group_name = "${azurerm_resource_group.mug-rg-infra.name}"
+
+  type = "Vpn"
+  vpn_type = "RouteBased"
+  sku = "basic"
+
+  ip_configuration {
+    name = "default"
+    public_ip_address_id = "${azurerm_public_ip.mug-public-ip-vnet-gtw.id}"
+    private_ip_address_allocation = "Dynamic"
+    subnet_id = "${azurerm_subnet.mug-gateway-subnet.id}"
   }
 }
