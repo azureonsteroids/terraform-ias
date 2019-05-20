@@ -1,18 +1,18 @@
-resource "azurerm_virtual_network" "mug-vnet-k8s-testing" {
-  name                = "mug-vnet-k8s-testing"
+resource "azurerm_virtual_network" "mug-vnet-k8s-prd" {
+  name                = "mug-vnet-k8s-prd"
   address_space       = ["10.51.12.0/22"]
   location            = "${var.location}"
-  resource_group_name = "${azurerm_resource_group.mug-rg-testing.name}"
+  resource_group_name = "${azurerm_resource_group.mug-rg-prd.name}"
 }
 
-resource "azurerm_subnet" "mug-subnet-k8s-testing" {
-  name                 = "mug-subnet-k8s-testing"
-  resource_group_name  = "${azurerm_resource_group.mug-rg-testing.name}"
-  virtual_network_name = "${azurerm_virtual_network.mug-vnet-k8s-testing.name}"
+resource "azurerm_subnet" "mug-subnet-k8s-prd" {
+  name                 = "mug-subnet-k8s-prd"
+  resource_group_name  = "${azurerm_resource_group.mug-rg-prd.name}"
+  virtual_network_name = "${azurerm_virtual_network.mug-vnet-k8s-prd.name}"
   address_prefix       = "10.51.14.0/23"
   service_endpoints    = ["Microsoft.Storage"]
 }
-
+ 
 resource "azurerm_virtual_network" "mug-subnet-infra" {
   name                = "mug-subnet-infra"
   address_space       = ["10.51.40.0/24"]

@@ -12,14 +12,14 @@ variable "aks_service_principal" {
 	}
 }
 
-variable "k8s-testing" {
+variable "k8s-prd" {
   	type = "map"
 
 	default = {
-		name = "mug-k8s-testing-cluster"
+		name = "mug-k8s-prd-cluster"
 		location = "westeurope"
-		resource_group = "mug-rg-testing"
-		dns_prefix = "mug-k8s-testing-cluster"
+		resource_group = "mug-rg-prd"
+		dns_prefix = "mug-k8s-prd-cluster"
 		kubernetes_version = "1.11.9"
 
 		network_plugin        = "azure"
@@ -28,6 +28,23 @@ variable "k8s-testing" {
 		docker_bridge_cidr    = "172.17.0.1/16"
 	}
 }
+
+# variable "k8s-backup" {
+#   	type = "map"
+
+# 	default = {
+# 		name = "mug-k8s-backup-cluster"
+# 		location = "westeurope"
+# 		resource_group = "mug-rg-backup"
+# 		dns_prefix = "mug-k8s-backup-cluster"
+# 		kubernetes_version = "1.11.9"
+
+# 		network_plugin        = "azure"
+# 		service_cidr          = "10.61.12.0/24"
+# 		dns_service_ip        = "10.61.12.10" 
+# 		docker_bridge_cidr    = "172.17.0.1/16"
+# 	}
+# }
 
 variable "traffic_manager_ttl" {
 	default = "300"
