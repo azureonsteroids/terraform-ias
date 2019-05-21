@@ -48,23 +48,10 @@ resource "azurerm_application_gateway" "mug-ag" {
 
   request_routing_rule {
     name                       = "ruleIngress-mug"
-    rule_type                  = "PathBasedRouting"
+    rule_type                  = "Basic"
     http_listener_name         = "listerIngress-mug"
-    url_path_map_name          = "urlPathMap-mug"
-  }
-
-  url_path_map {
-    name      = "urlPathMap-mug"
-    default_backend_address_pool_name  = "backendPoolIngress-mug"
-    default_backend_http_settings_name  = "HTTPSettingIngress-mug"
-
-    path_rule {
-      name = "pathRule-mug-dev"
-      paths = ["/dev/*"]
-      backend_address_pool_name = "backendPoolIngress-mug-dev"
-      backend_http_settings_name  = "HTTPSettingIngress-mug-dev"
-    }
-
+    backend_address_pool_name  = "backendPoolIngress-mug"
+    backend_http_settings_name = "HTTPSettingIngress-mug"
   }
 
   # DEV 
@@ -82,4 +69,19 @@ resource "azurerm_application_gateway" "mug-ag" {
     request_timeout       = 1
   }
 
+  http_listener {
+    name                           = "listerIngress-mug-dev"
+    host_name                      = "devmuginclermont.trafficmanager.net"
+    frontend_ip_configuration_name = "${var.application_gateway}-feip"
+    frontend_port_name             = "${var.application_gateway}-feport"
+    protocol                       = "Http"
+  }
+
+  request_routing_rule {
+    name                       = "ruleIngress-mug-dev"
+    rule_type                  = "Basic"
+    http_listener_name         = "listerIngress-mug-dev"
+    backend_address_pool_name  = "backendPoolIngress-mug-dev"
+    backend_http_settings_name = "HTTPSettingIngress-mug-dev"
+  }
 }
