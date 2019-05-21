@@ -48,10 +48,38 @@ resource "azurerm_application_gateway" "mug-ag" {
 
   request_routing_rule {
     name                       = "ruleIngress-mug"
-    rule_type                  = "Basic"
+    rule_type                  = "PathBasedRouting"
     http_listener_name         = "listerIngress-mug"
-    backend_address_pool_name  = "backendPoolIngress-mug"
-    backend_http_settings_name = "HTTPSettingIngress-mug"
+    url_path_map_name          = "urlPathMap-mug"
+  }
+
+  url_path_map {
+    name      = "urlPathMap-mug"
+    default_backend_address_pool_name  = "backendPoolIngress-mug"
+    default_backend_http_settings_name  = "HTTPSettingIngress-mug"
+
+    path_rule {
+      name = "pathRule-mug-dev"
+      paths = ["/dev/*"]
+      backend_address_pool_name = "backendPoolIngress-mug-dev"
+      backend_http_settings_name  = "HTTPSettingIngress-mug-dev"
+    }
+
+  }
+
+  # DEV 
+
+  backend_address_pool {
+    name = "backendPoolIngress-mug-dev"
+    ip_address_list = ["10.51.14.67"]
+  }
+
+  backend_http_settings {
+    name                  = "HTTPSettingIngress-mug-dev"
+    cookie_based_affinity = "Enabled"
+    port                  = 80
+    protocol              = "Http"
+    request_timeout       = 1
   }
 
 }

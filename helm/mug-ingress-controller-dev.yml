@@ -1,5 +1,5 @@
 controller:
   service:
     annotations:
-      kubernetes.io/ingress.class: "mug-prd-controller"
+      kubernetes.io/ingress.class: "mug-dev-controller"
       service.beta.kubernetes.io/azure-load-balancer-internal: "true"

@@ -27,12 +27,23 @@ kubectl.exe apply -f helm/tiller-service-account.yaml
 
 helm init --service-account tiller
 
+## Prod
 helm install stable/nginx-ingress \
     --namespace kube-system \
     --name mug-prd-controller \
     --set controller.scope.namespace=mug \
     --set controller.ingressClass=mug-prd-controller \
     -f helm/mug-ingress-controller.yml
+
+## Dev
+helm install stable/nginx-ingress \
+    --namespace kube-system \
+    --name mug-dev-controller \
+    --set controller.scope.namespace=mug \
+    --set controller.ingressClass=mug-dev-controller \
+    -f helm/mug-ingress-controller-dev.yml
+
+
 
 
 
